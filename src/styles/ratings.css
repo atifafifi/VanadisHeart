@@ -1,0 +1,112 @@
+/* ===================================
+   MODIFIED: ratings.css
+   =================================== */
+/* Ratings Component Styles */
+
+.ratings-container {
+  width: 100%;
+}
+
+.ratings-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratings-stars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.ratings-star {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.ratings-star.filled {
+  color: #fbbf24;
+}
+
+.ratings-star.half {
+  position: relative;
+  color: #d1d5db;
+}
+
+.ratings-star.half::before {
+  content: "★";
+  position: absolute;
+  left: 0;
+  color: #fbbf24;
+  width: 50%;
+  overflow: hidden;
+}
+
+.ratings-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.ratings-count {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.ratings-interactive {
+  cursor: pointer;
+}
+
+.ratings-interactive .ratings-star {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ratings-interactive .ratings-star:hover {
+  transform: scale(1.1);
+}
+
+.ratings-interactive .ratings-star.hoverable {
+  color: #fed7aa;
+}
+
+.ratings-large .ratings-star {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ratings-large .ratings-value {
+  font-size: 1.125rem;
+}
+
+.ratings-small .ratings-star {
+  width: 1rem;
+  height: 1rem;
+}
+
+.ratings-small .ratings-value {
+  font-size: 0.75rem;
+}
+
+/* Recipe Details Page Styles */
+/* Page Container with Dynamic Margin */
+.recipe-details-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  margin-left: 5rem;
+  padding-top: 4rem; /* ADDED FOR TOP NAVBAR */
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Adjust margin when navigation is expanded */
+.navigation.expanded ~ .recipe-details-container,
+body:has(.navigation.expanded) .recipe-details-container {
+  margin-left: 16rem;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .recipe-details-container {
+    margin-left: 0;
+    padding-top: 4rem; /* KEEP TOP NAVBAR PADDING */
+  }
+}

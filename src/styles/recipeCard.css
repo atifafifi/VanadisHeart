@@ -1,0 +1,209 @@
+/* ===================================
+   MODIFIED: recipeCard.css
+   =================================== */
+/* Recipe Card Component Styles */
+
+.recipe-card {
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 66.67%; /* 3:2 aspect ratio */
+  overflow: hidden;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+}
+
+.recipe-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recipe-card:hover .recipe-card-image {
+  transform: scale(1.05);
+}
+
+.recipe-card-bookmark {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.recipe-card-bookmark:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-card-bookmark svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #6b7280;
+  transition: all 0.3s ease;
+}
+
+.recipe-card-bookmark.bookmarked svg {
+  color: #ff6b35;
+  fill: #ff6b35;
+}
+
+.recipe-card-content {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-card-header {
+  margin-bottom: 0.75rem;
+}
+
+.recipe-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.recipe-card-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.recipe-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.recipe-card-tag {
+  padding: 0.25rem 0.75rem;
+  background: #f3f4f6;
+  color: #4b5563;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.recipe-card-tag:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.recipe-card-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.recipe-card-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.recipe-card-time {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.recipe-card-time svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.recipe-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.recipe-card-rating-star {
+  color: #f59e0b;
+  font-size: 1rem;
+}
+
+.recipe-card-rating-value {
+  font-weight: 600;
+  color: #111827;
+}
+
+.recipe-card-difficulty {
+  margin-top: 0.5rem;
+}
+
+.recipe-card-difficulty-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.recipe-card-difficulty-badge.easy {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.recipe-card-difficulty-badge.medium {
+  background: #fed7aa;
+  color: #92400e;
+}
+
+.recipe-card-difficulty-badge.hard {
+  background: #fecaca;
+  color: #991b1b;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .recipe-card-content {
+    padding: 1rem;
+  }
+
+  .recipe-card-title {
+    font-size: 1rem;
+  }
+
+  .recipe-card-description {
+    font-size: 0.8125rem;
+  }
+}

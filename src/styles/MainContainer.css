@@ -1,0 +1,236 @@
+/* ===================================
+   CENTRALIZED LAYOUT SYSTEM
+   =================================== */
+
+/* Base Layout Variables */
+:root {
+  --top-navbar-height: 4rem;
+  --sidebar-collapsed-width: 5rem;
+  --sidebar-expanded-width: 16rem;
+  --layout-transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===================================
+   TOP NAVBAR SPACING
+   =================================== */
+
+/* Global top spacing for all page containers */
+.page-container,
+.login-container,
+.my-recipes-container,
+.recipe-details-container,
+.search-page-container,
+.recommended-container {
+  padding-top: var(--top-navbar-height);
+  min-height: 100vh;
+}
+
+/* ===================================
+   SIDEBAR LAYOUT (With Navigation)
+   =================================== */
+
+/* Pages with sidebar navigation */
+.my-recipes-container,
+.recipe-details-container,
+.search-page-container {
+  margin-left: var(--sidebar-collapsed-width);
+  transition: var(--layout-transition);
+}
+
+/* Adjust margin when navigation is expanded */
+.navigation.expanded ~ .my-recipes-container,
+.navigation.expanded ~ .recipe-details-container,
+.navigation.expanded ~ .search-page-container,
+body:has(.navigation.expanded) .my-recipes-container,
+body:has(.navigation.expanded) .recipe-details-container,
+body:has(.navigation.expanded) .search-page-container {
+  margin-left: var(--sidebar-expanded-width);
+}
+
+/* ===================================
+   FULL WIDTH LAYOUT (No Sidebar)
+   =================================== */
+
+/* Pages without sidebar navigation */
+.login-container,
+.recommended-container {
+  margin-left: 0;
+  transition: none;
+}
+
+/* Login page specific adjustment */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+  padding: 2rem 1rem;
+}
+
+/* ===================================
+   STICKY HEADER ADJUSTMENT
+   =================================== */
+
+/* Sticky headers should account for top navbar */
+.my-recipes-header,
+.recipe-details-header,
+.search-page-header,
+.recommended-header {
+  position: sticky;
+  top: var(--top-navbar-height);
+  z-index: 40;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Enhanced backdrop blur for sticky headers */
+.my-recipes-header {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+/* Tablet and below - Remove sidebar margin */
+@media (max-width: 768px) {
+  .my-recipes-container,
+  .recipe-details-container,
+  .search-page-container {
+    margin-left: 0;
+  }
+  
+  .navigation.expanded ~ .my-recipes-container,
+  .navigation.expanded ~ .recipe-details-container,
+  .navigation.expanded ~ .search-page-container,
+  body:has(.navigation.expanded) .my-recipes-container,
+  body:has(.navigation.expanded) .recipe-details-container,
+  body:has(.navigation.expanded) .search-page-container {
+    margin-left: 0;
+  }
+  
+  .login-container {
+    padding: 1rem;
+  }
+}
+
+/* Mobile - Adjust top navbar height if needed */
+@media (max-width: 480px) {
+  :root {
+    --top-navbar-height: 3.5rem;
+  }
+}
+
+/* ===================================
+   FILTERS SIDEBAR STICKY POSITION
+   =================================== */
+
+/* Filters card should account for top navbar + page header */
+.search-filters-card {
+  position: sticky;
+  top: calc(var(--top-navbar-height) + 6rem);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .search-filters-card {
+    position: static;
+  }
+}
+
+/* ===================================
+   PRINT STYLES
+   =================================== */
+
+@media print {
+  .my-recipes-container,
+  .recipe-details-container,
+  .search-page-container,
+  .recommended-container,
+  .login-container {
+    margin-left: 0;
+    padding-top: 0;
+  }
+  
+  .my-recipes-header,
+  .recipe-details-header,
+  .search-page-header,
+  .recommended-header {
+    position: static;
+  }
+}
+
+/* ===================================
+   SMOOTH SCROLLING
+   =================================== */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--top-navbar-height);
+}
+
+/* ===================================
+   UTILITY CLASSES
+   =================================== */
+
+/* For elements that need to account for navbar height */
+.with-navbar-spacing {
+  margin-top: var(--top-navbar-height);
+}
+
+/* For modals and overlays that should cover the navbar */
+.full-screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+/* For content that should never go under the navbar */
+.below-navbar {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===================================
+   ACCESSIBILITY
+   =================================== */
+
+/* Skip to main content link (hidden but accessible) */
+.skip-to-main {
+  position: absolute;
+  top: var(--top-navbar-height);
+  left: -9999px;
+  z-index: 999;
+  padding: 1rem;
+  background: var(--primary-orange);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.skip-to-main:focus {
+  left: 0;
+}
+
+/* ===================================
+   ANIMATION ADJUSTMENTS
+   =================================== */
+
+/* Ensure animations don't conflict with layout transitions */
+@media (prefers-reduced-motion: reduce) {
+  .my-recipes-container,
+  .recipe-details-container,
+  .search-page-container {
+    transition: none;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}

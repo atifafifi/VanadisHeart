@@ -1,0 +1,58 @@
+/* Global Layout Styles */
+
+:root {
+  --navbar-height: 4rem;
+  --content-padding: 1.5rem;
+  --max-content-width: 1400px;
+}
+
+.page-container {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: var(--content-padding);
+  padding-top: calc(var(--navbar-height) + var(--content-padding));
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.page-header {
+  background: white;
+  position: sticky;
+  top: var(--navbar-height);
+  z-index: 40;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin: calc(-1 * var(--content-padding)) calc(-1 * var(--content-padding)) var(--content-padding) calc(-1 * var(--content-padding));
+  padding: 1rem var(--content-padding);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  :root {
+    --content-padding: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --content-padding: 1rem;
+  }
+  
+  .page-header {
+    margin: -1rem -1rem 1rem -1rem;
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .page-container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .page-header {
+    display: none;
+  }
+}

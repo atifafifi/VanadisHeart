@@ -1,0 +1,280 @@
+/* ===================================
+   MODIFIED: recommended.css
+   =================================== */
+/* Recommended Page Styles */
+
+/* Layout */
+.recommended-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding-top: 6rem; /* ADDED FOR TOP NAVBAR */
+  padding-left: 4rem;
+  border-radius: 25px;
+}
+
+/* Header Section */
+.recommended-header {
+  background-color: #fff3e0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 2rem;
+  border-radius: 15px;
+  padding: 1rem 2vw;
+}
+
+.recommended-header-content {
+  padding: 1.5rem 0;
+}
+
+.recommended-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recommended-title-section h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #ff8a65;
+}
+
+.recommended-title-section p {
+  color: #ffb74d;
+  margin-top: 0.25rem;
+}
+
+.recommended-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Button Icons */
+.btn-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+/* Content Section */
+.recommended-content {
+  margin-top: 4rem;
+  background-color: #fff3e0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 2rem;
+  border-radius: 15px;
+  padding: 1rem 2vw;
+}
+
+/* Search Section */
+.recommended-search {
+  margin-bottom: 2rem;
+}
+
+/* Results Count */
+.recommended-results-count {
+  margin-bottom: 1.5rem;
+}
+
+.recommended-results-count p {
+  color: #4b5563;
+}
+
+/* Empty State */
+.recommended-empty-state {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.recommended-empty-icon-wrapper {
+  width: 5rem;
+  height: 5rem;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.recommended-empty-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #9ca3af;
+}
+
+.recommended-empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.recommended-empty-state p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.recommended-empty-button {
+  padding: 0.75rem 2rem;
+}
+
+.recommended-tags {
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Recipes Grid */
+.recommended-recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .recommended-recipes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .recommended-recipes-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Recipe Card Container */
+.recommended-recipe-card {
+  height: 100%;
+}
+
+/* Hover Effects */
+.recommended-header-actions button {
+  transition: all 0.2s ease;
+}
+
+.recommended-header-actions button:hover {
+  transform: translateY(-2px);
+}
+
+.recommended-empty-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+}
+
+/* Animation for empty state */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recommended-empty-state {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Loading state */
+.recommended-loading {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.recommended-loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #f3f4f6;
+  border-top-color: #ff6b35;
+  border-radius: 9999px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Base styles for all tags (Size, Shape, Font, Transition, Focus) */
+.tags-button {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem; 
+  font-weight: 200; 
+
+  /* Inactive State Base Appearance */
+  background-color: white;
+  color: #4b5563; 
+  border: 1px solid #9ca3af; 
+  box-shadow: none;
+
+  /* Behavior & Transition */
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 150ms ease-in-out; 
+}
+
+/* Inactive State Hover/Focus */
+.tags-button:hover {
+  border-color: #ff7f24;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+}
+
+/* Focus Ring (Accessibility) */
+.tags-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px white, 0 0 0 6px #ff7f24; /* Custom focus ring */
+}
+
+/* Active State (Defined by a modifier class) */
+.tags-button.is-active {
+  background-color: #ff7f24;
+  color: white;
+  border-color: #ff7f24;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+}
+
+
+.difficulty-button {
+  padding: 4px 12px; 
+  font-size: 0.75rem; 
+  border-radius: 9999px; 
+
+  /* Inactive State Base Appearance */
+  background-color: white;
+  color: #4b5563; 
+  border: 1px solid #d1d5db; 
+
+  /* Behavior & Transition */
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 150ms ease-in-out; /* Equivalent to Tailwind's transition-colors */
+}
+
+/* Inactive State Hover */
+.difficulty-button:hover {
+  border-color: var(--primary-orange);
+}
+
+.difficulty-button.is-active {
+  background-color: var(--primary-orange);
+  color: white;
+  border-color: var(--primary-orange); 
+}
+
+.difficulty-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-orange);
+}

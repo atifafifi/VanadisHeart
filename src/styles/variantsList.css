@@ -1,0 +1,164 @@
+/* ===================================
+   MODIFIED: variantsList.css
+   =================================== */
+/* Variants List Component Styles */
+
+.variants-list-container {
+  width: 100%;
+}
+
+.variants-list-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.variants-list-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.variants-list-empty-icon-wrapper {
+  width: 4rem;
+  height: 4rem;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.variants-list-empty-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #9ca3af;
+}
+
+.variants-list-empty-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.variants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.variant-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.variant-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.variant-header {
+  width: 100%;
+  padding: 1rem;
+  background: #f9fafb;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.variant-header:hover {
+  background: #f3f4f6;
+}
+
+.variant-header-content {
+  flex: 1;
+}
+
+.variant-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+}
+
+.variant-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.variant-toggle-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #9ca3af;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.variant-toggle-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.variant-content {
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.variant-section {
+  margin-bottom: 1rem;
+}
+
+.variant-section:last-child {
+  margin-bottom: 0;
+}
+
+.variant-section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.variant-modifications-list,
+.variant-ingredients-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.variant-modifications-list li,
+.variant-ingredients-list li {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+  line-height: 1.5;
+}
+
+.variant-notes {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.6;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  border-left: 3px solid #ff6b35;
+}
