@@ -9,9 +9,9 @@ import MyRecipesPage from './pages/MyRecipesPage';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 flex">
+      <div className="app-container">
         <Navigation />
-        <main className="flex-1 overflow-y-auto">
+        <main className="main-content">
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />

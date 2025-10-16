@@ -1,89 +1,117 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import SearchBar from "../components/SearchBar";
-import { sampleRecipes } from "../data/sampleRecipes";
 import type { Recipe } from "../types";
+import { fetchRecipes, getRandomQuery } from "../services/recipeApi";
 import "../styles/recommended.css";
 
+interface RecipeFilters {
+  query?: string;
+  tags?: string[];
+  difficulty?: string[];
+  maxPrepTime?: number;
+  minRating?: number;
+}
+
 const RecommendedRecipesPage: React.FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [recipes, setRecipes] = useState<Recipe[]>(sampleRecipes);
-  const [filteredRecipes, setFilteredRecipes] =
-    useState<Recipe[]>(sampleRecipes);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSearch = (query: string) => {
-    if (!query.trim()) {
-      setFilteredRecipes(recipes);
-      return;
+  useEffect(() => {
+    const loadRandomRecipes = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const randomQuery = getRandomQuery();
+        console.log("Fetching recipes for:", randomQuery);
+        const initialRecipes = await fetchRecipes(randomQuery);
+        setRecipes(initialRecipes);
+        setFilteredRecipes(initialRecipes);
+      } catch (err) {
+        setError("Failed to load recipes");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadRandomRecipes();
+  }, []);
+
+  const handleSearch = async (query: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const searchResults = await fetchRecipes(query);
+
+      if (searchResults.length === 0) {
+        setError("No recipes found for your search");
+      }
+
+      setRecipes(searchResults);
+      setFilteredRecipes(searchResults);
+    } catch (err) {
+      setError("Failed to search recipes");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-
-    const filtered = recipes.filter(
-      (recipe) =>
-        recipe.name.toLowerCase().includes(query.toLowerCase()) ||
-        recipe.description.toLowerCase().includes(query.toLowerCase()) ||
-        recipe.tags.some((tag) =>
-          tag.toLowerCase().includes(query.toLowerCase())
-        ) ||
-        recipe.ingredients.some((ingredient) =>
-          ingredient.toLowerCase().includes(query.toLowerCase())
-        )
-    );
-
-    setFilteredRecipes(filtered);
   };
 
-  const handleFiltersChange = (filters: any) => {
+  const handleFiltersChange = (filters: RecipeFilters) => {
     let filtered = [...recipes];
 
     // Apply text search
-    if (filters.query) {
+    if (typeof filters.query === 'string' && filters.query.trim()) {
+      const searchTerm = filters.query.toLowerCase();
       filtered = filtered.filter(
         (recipe) =>
-          recipe.name.toLowerCase().includes(filters.query.toLowerCase()) ||
-          recipe.description
-            .toLowerCase()
-            .includes(filters.query.toLowerCase()) ||
-          recipe.tags.some((tag) =>
-            tag.toLowerCase().includes(filters.query.toLowerCase())
-          )
+          recipe.name.toLowerCase().includes(searchTerm) ||
+          recipe.description.toLowerCase().includes(searchTerm) ||
+          recipe.tags.some((tag) => tag.toLowerCase().includes(searchTerm))
       );
     }
 
     // Apply tag filters
-    if (filters.tags && filters.tags.length > 0) {
+    if (Array.isArray(filters.tags) && filters.tags.length > 0) {
       filtered = filtered.filter((recipe) =>
-        filters.tags.some((tag: string) => recipe.tags.includes(tag))
+        filters.tags!.some((tag) => recipe.tags.includes(tag))
       );
     }
 
     // Apply difficulty filters
-    if (filters.difficulty && filters.difficulty.length > 0) {
+    if (Array.isArray(filters.difficulty) && filters.difficulty.length > 0) {
       filtered = filtered.filter((recipe) =>
-        filters.difficulty.includes(recipe.difficulty)
+        filters.difficulty!.includes(recipe.difficulty)
       );
     }
 
     // Apply prep time filter
-    if (filters.maxPrepTime > 0) {
+    const maxPrepTime = filters.maxPrepTime;
+    if (typeof maxPrepTime === 'number' && maxPrepTime > 0) {
       filtered = filtered.filter(
-        (recipe) => recipe.prepTime + recipe.cookTime <= filters.maxPrepTime
+        (recipe) => recipe.prepTime + recipe.cookTime <= maxPrepTime
       );
     }
 
     // Apply rating filter
-    if (filters.minRating > 0) {
+    const minRating = filters.minRating;
+    if (typeof minRating === 'number' && minRating > 0) {
       filtered = filtered.filter(
-        (recipe) => recipe.rating >= filters.minRating
+        (recipe) => recipe.rating >= minRating
       );
     }
 
     setFilteredRecipes(filtered);
   };
 
-  const handleRecipeClick = (recipeId: string) => {
-    navigate(`/recipe/${recipeId}`);
+  const handleRecipeClick = (recipe: Recipe) => {
+    sessionStorage.setItem('currentRecipe', JSON.stringify(recipe));
+    navigate(`/recipe/${recipe.id}`);
   };
 
   //reset const function
@@ -156,15 +184,35 @@ const RecommendedRecipesPage: React.FC = () => {
           />
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="recommended-loading-state">
+            <div className="spinner"></div>
+            <p>Loading recipes...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="recommended-error-state">
+            <p>{error}</p>
+            <button onClick={() => handleSearch("")} className="btn btn-primary">
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Results Count */}
-        <div className="recommended-results-count">
-          <p>
-            Showing {filteredRecipes.length} of {recipes.length} recipes
-          </p>
-        </div>
+        {!isLoading && !error && (
+          <div className="recommended-results-count">
+            <p>
+              Showing {filteredRecipes.length} of {recipes.length} recipes
+            </p>
+          </div>
+        )}
 
         {/* Recipes Grid */}
-        {filteredRecipes.length === 0 ? (
+        {!isLoading && filteredRecipes.length === 0 ? (
           <div className="recommended-empty-state">
             <div className="recommended-empty-icon-wrapper">
               <svg
@@ -180,24 +228,19 @@ const RecommendedRecipesPage: React.FC = () => {
                   d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
+              <p>No recipes found</p>
+              <button onClick={resetFilters} className="btn btn-primary">
+                Reset Filters
+              </button>
             </div>
-            <h3>No recipes found</h3>
-            <p>Try adjusting your search criteria or filters</p>
-            <button
-              onClick={resetFilters}
-              className="btn btn-primary recommended-empty-button"
-            >
-              Show All Recipes
-            </button>
           </div>
         ) : (
-          <div className="recommended-recipes-grid">
+          <div className="recommended-grid">
             {filteredRecipes.map((recipe) => (
               <RecipeCard
                 key={recipe.id}
                 recipe={recipe}
-                onClick={() => handleRecipeClick(recipe.id)}
-                className="recommended-recipe-card"
+                onClick={() => handleRecipeClick(recipe)}
               />
             ))}
           </div>

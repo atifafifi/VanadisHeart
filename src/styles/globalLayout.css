@@ -13,7 +13,7 @@
   padding: var(--content-padding);
   padding-top: calc(var(--navbar-height) + var(--content-padding));
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var(--gray-50);
 }
 
 .page-header {
@@ -24,7 +24,7 @@
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   margin: calc(-1 * var(--content-padding)) calc(-1 * var(--content-padding)) var(--content-padding) calc(-1 * var(--content-padding));
   padding: 1rem var(--content-padding);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--gray-200);
 }
 
 /* Responsive adjustments */
@@ -55,4 +55,15 @@
   .page-header {
     display: none;
   }
+/* App container styles */
+.app-container {
+  min-height: 100vh;
+  background-color: var(--gray-50);
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+}
 }

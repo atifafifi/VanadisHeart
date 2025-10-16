@@ -63,7 +63,7 @@ body:has(.navigation.expanded) .search-page-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
+  background: linear-gradient(135deg, var(--primary-pastel-50) 0%, var(--primary-pastel-100) 100%);
   padding: 2rem 1rem;
 }
 
@@ -207,7 +207,7 @@ html {
   left: -9999px;
   z-index: 999;
   padding: 1rem;
-  background: var(--primary-orange);
+  background: var(--primary-pastel);
   color: white;
   text-decoration: none;
   font-weight: 600;

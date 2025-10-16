@@ -24,9 +24,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Easy': return 'var(--complementary-teal)';
-      case 'Medium': return 'var(--primary-orange)';
-      case 'Hard': return 'var(--complementary-blue)';
+      case 'Easy': return 'var(--complementary-mint)';
+      case 'Medium': return 'var(--primary-pastel)';
+      case 'Hard': return 'var(--complementary-lavender)';
       default: return 'var(--gray-500)';
     }
   };
@@ -75,13 +75,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
           <div className="flex items-center gap-4">
             <span className="flex items-center">
-              <svg className="icon-sm mr-1.5 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="icon-sm mr-1.5 text-primary-pastel" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               {formatTime(recipe.prepTime + recipe.cookTime)}
             </span>
             <span className="flex items-center">
-              <svg className="icon-sm mr-1.5 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="icon-sm mr-1.5 text-primary-pastel" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               {recipe.servings} servings
@@ -94,9 +94,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
             <span 
               key={index}
               className="px-2 py-1 text-xs rounded-full"
-              style={{ 
-                backgroundColor: 'var(--primary-orange-100)', 
-                color: 'var(--primary-orange-800)' 
+              style={{
+                backgroundColor: 'var(--primary-pastel-100)',
+                color: 'var(--primary-pastel-800)'
               }}
             >
               {tag}

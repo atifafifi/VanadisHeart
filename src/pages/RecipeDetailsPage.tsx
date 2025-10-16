@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { sampleRecipes } from '../data/sampleRecipes';
 import type { Recipe } from '../types';
 import NotesEditor from '../components/NotesEditor';
-import VariantsList from '../components/VariantsList';
-import Ratings from '../components/Ratings';
+import { fetchRecipes } from '../services/recipeApi';
 import '../styles/recipeDetails.css';
 
 const RecipeDetailsPage: React.FC = () => {
@@ -15,25 +13,46 @@ const RecipeDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      const foundRecipe = sampleRecipes.find(r => r.id === id);
-      setRecipe(foundRecipe || null);
-      setIsLoading(false);
-    }, 500);
+    const loadRecipe = async () => {
+      setIsLoading(true);
+      try {
+        // Since Ninja API doesn't support fetching by ID, we'll need to store the recipe in state/localStorage
+        const storedRecipes = sessionStorage.getItem('currentRecipe');
+        if (storedRecipes) {
+          const parsedRecipe = JSON.parse(storedRecipes);
+          if (parsedRecipe.id === id) {
+            setRecipe(parsedRecipe);
+            return;
+          }
+        }
+        // Fallback to fetching new data
+        const recipes = await fetchRecipes();
+        const foundRecipe = recipes.find(r => r.id === id);
+        if (foundRecipe) {
+          setRecipe(foundRecipe);
+          sessionStorage.setItem('currentRecipe', JSON.stringify(foundRecipe));
+        }
+      } catch (error) {
+        console.error('Error loading recipe:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadRecipe();
   }, [id]);
 
-  const handleNotesChange = (notes: string[]) => {
-    setUserNotes(notes);
-    // In a real app, this would save to the backend
-  };
+  // const handleNotesChange = (notes: string[]) => {
+  //   setUserNotes(notes);
+  //   // In a real app, this would save to the backend
+  // };
 
-  const handleRatingChange = (rating: number) => {
-    if (recipe) {
-      // In a real app, this would update the recipe rating
-      console.log(`Rating changed to: ${rating}`);
-    }
-  };
+  // const handleRatingChange = (rating: number) => {
+  //   if (recipe) {
+  //     // In a real app, this would update the recipe rating
+  //     console.log(`Rating changed to: ${rating}`);
+  //   }
+  // };
 
   const formatTime = (minutes: number) => {
     if (minutes < 60) return `${minutes}m`;
@@ -55,7 +74,7 @@ const RecipeDetailsPage: React.FC = () => {
     return (
       <div className="recipe-details-container">
         <div className="text-center">
-          <div className="w-16 h-16 bg-primary-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="loading-spinner">
             <svg className="animate-spin h-8 w-8 text-primary-orange" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -71,7 +90,7 @@ const RecipeDetailsPage: React.FC = () => {
     return (
       <div className="recipe-details-container">
         <div className="text-center">
-          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="error-icon">
             <svg className="icon-2xl text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
@@ -80,7 +99,7 @@ const RecipeDetailsPage: React.FC = () => {
           <p className="text-lg text-gray-600 mb-6">The recipe you're looking for doesn't exist.</p>
           <button
             onClick={() => navigate('/recommended')}
-            className="btn btn-primary px-8 py-3"
+            className="btn btn-primary"
           >
             Back to Recipes
           </button>
@@ -90,21 +109,22 @@ const RecipeDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="recipe-details-page">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="recipe-details-header">
         <div className="container py-6">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => navigate('/recommended')}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <svg className="icon-md mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Recipes
-            </button>
-            <div className="flex items-center gap-4">
+          <div className="recipe-details-header-content">
+            <div className="breadcrumb">
+              <span
+                onClick={() => navigate('/recommended')}
+                className="breadcrumb-link"
+              >
+                Recipes
+              </span>
+              <span className="breadcrumb-separator">/</span>
+              <span className="breadcrumb-current">{recipe?.name}</span>
+            </div>
+            <div className="recipe-details-actions">
               <button className="btn btn-outline">
                 <svg className="icon-sm mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -123,67 +143,39 @@ const RecipeDetailsPage: React.FC = () => {
       </div>
 
       <div className="container py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="recipe-details-layout">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="recipe-details-main">
             {/* Recipe Header */}
             <div className="card">
               <div className="card-body">
-                {recipe.image && (
-                  <div className="mb-6">
+                {recipe?.image && (
+                  <div className="recipe-image-container">
                     <img
                       src={recipe.image}
                       alt={recipe.name}
-                      className="w-full h-64 object-cover rounded-lg"
+                      className="recipe-image"
                     />
                   </div>
                 )}
 
-                <div className="flex items-start justify-between mb-4">
+                <div className="recipe-header-info">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{recipe.name}</h1>
-                    <p className="text-lg text-gray-600 mb-4">{recipe.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span>By {recipe.author}</span>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{recipe?.name}</h1>
+                    <div className="recipe-times">
+                      <span>Preparation Time: {formatTime(recipe?.prepTime || 0)}</span>
                       <span>•</span>
-                      <span>{new Date(recipe.createdAt).toLocaleDateString()}</span>
+                      <span>Cooking Time: {formatTime(recipe?.cookTime || 0)}</span>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center justify-end mb-2">
-                      <Ratings rating={recipe.rating} size="lg" />
-                    </div>
-                    <div
-                      className="inline-block px-3 py-1 rounded-full text-sm font-medium text-white"
-                      style={{ backgroundColor: getDifficultyColor(recipe.difficulty) }}
-                    >
-                      {recipe.difficulty}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recipe Stats */}
-                <div className="grid grid-cols-3 gap-4 py-4 border-t border-b border-gray-200">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{formatTime(recipe.prepTime)}</div>
-                    <div className="text-sm text-gray-500">Prep Time</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{formatTime(recipe.cookTime)}</div>
-                    <div className="text-sm text-gray-500">Cook Time</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{recipe.servings}</div>
-                    <div className="text-sm text-gray-500">Servings</div>
                   </div>
                 </div>
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {recipe.tags.map((tag, index) => (
+                <div className="recipe-tags">
+                  {recipe?.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 text-sm rounded-full"
+                      className="recipe-tag"
                       style={{
                         backgroundColor: 'var(--primary-orange-100)',
                         color: 'var(--primary-orange-800)'
@@ -202,9 +194,9 @@ const RecipeDetailsPage: React.FC = () => {
                 <h2 className="text-xl font-semibold text-gray-900">Ingredients</h2>
               </div>
               <div className="card-body">
-                <ul className="space-y-2">
-                  {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index} className="flex items-start">
+                <ul className="ingredients-list">
+                  {recipe?.ingredients.map((ingredient, index) => (
+                    <li key={index} className="ingredient-item">
                       <span className="text-primary-orange mr-3 mt-1">•</span>
                       <span className="text-gray-700">{ingredient}</span>
                     </li>
@@ -219,66 +211,45 @@ const RecipeDetailsPage: React.FC = () => {
                 <h2 className="text-xl font-semibold text-gray-900">Instructions</h2>
               </div>
               <div className="card-body">
-                <ol className="space-y-4">
-                  {recipe.instructions.map((instruction, index) => (
-                    <li key={index} className="flex items-start">
-                      <span
-                        className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium mr-4"
-                        style={{ backgroundColor: 'var(--primary-orange)' }}
-                      >
-                        {index + 1}
-                      </span>
-                      <span className="text-gray-700">{instruction}</span>
-                    </li>
+                <div className="instructions-list">
+                  {recipe?.instructions.map((instruction, index) => (
+                    instruction.trim() && (
+                      <div key={index} className="instruction-item">
+                        <span
+                          className="instruction-number"
+                          style={{ backgroundColor: 'var(--primary-orange)' }}
+                        >
+                          {index + 1}
+                        </span>
+                        <span className="text-gray-700">{instruction.trim()}</span>
+                      </div>
+                    )
                   ))}
-                </ol>
+                </div>
               </div>
             </div>
-
-            {/* Variants */}
-            <VariantsList variants={recipe.variants} />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Rate Recipe */}
+          <div className="recipe-details-sidebar">
+            {/* Difficulty Level */}
             <div className="card">
               <div className="card-body">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Rate this Recipe</h3>
-                <Ratings
-                  rating={0}
-                  interactive={true}
-                  onRatingChange={handleRatingChange}
-                  size="lg"
-                />
-                <p className="text-sm text-gray-500 mt-2">Click on a star to rate</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Difficulty Level</h3>
+                <div
+                  className="difficulty-badge"
+                  style={{ backgroundColor: getDifficultyColor(recipe?.difficulty || 'Medium') }}
+                >
+                  {recipe?.difficulty || 'Medium'}
+                </div>
               </div>
             </div>
 
             {/* Notes Editor */}
             <NotesEditor
               notes={userNotes}
-              onNotesChange={handleNotesChange}
+              onNotesChange={setUserNotes}
             />
-
-            {/* Original Notes */}
-            {recipe.notes.length > 0 && (
-              <div className="card">
-                <div className="card-header">
-                  <h3 className="text-lg font-semibold text-gray-900">Chef's Notes</h3>
-                </div>
-                <div className="card-body">
-                  <ul className="space-y-2">
-                    {recipe.notes.map((note, index) => (
-                      <li key={index} className="text-sm text-gray-700 flex items-start">
-                        <span className="text-primary-orange mr-2 mt-1">💡</span>
-                        {note}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/notesEditor.css';
 
 
@@ -66,21 +66,21 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
 
   return (
     <div className={`${className}`}>
-      <div className="flex items-center justify-between mb-4">
+      <div className="notes-header">
         <h3 className="text-lg font-semibold text-gray-900">Notes & Tips</h3>
         <span className="text-sm text-gray-500">{notes.length} notes</span>
       </div>
 
       {/* Add New Note */}
       {!readOnly && (
-        <form onSubmit={handleAddNote} className="mb-6">
-          <div className="flex gap-2">
+        <form onSubmit={handleAddNote} className="add-note-form">
+          <div className="add-note-input-group">
             <input
               type="text"
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
               placeholder="Add a note or tip..."
-              className="form-input flex-1"
+              className="form-input add-note-input"
               onKeyPress={handleKeyPress}
             />
             <button
@@ -98,10 +98,10 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
       )}
 
       {/* Notes List */}
-      <div className="space-y-3">
+      <div className="notes-list">
         {notes.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+          <div className="empty-notes">
+            <div className="empty-notes-icon">
               <svg className="icon-2xl text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -110,18 +110,18 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
           </div>
         ) : (
           notes.map((note, index) => (
-            <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div key={index} className="note-item">
               {editingIndex === index ? (
-                <div className="space-y-3">
+                <div className="edit-note-form">
                   <textarea
                     value={editingText}
                     onChange={(e) => setEditingText(e.target.value)}
-                    className="form-input form-textarea w-full"
+                    className="form-input form-textarea edit-note-textarea"
                     rows={3}
                     onKeyPress={handleKeyPress}
                     autoFocus
                   />
-                  <div className="flex gap-2">
+                  <div className="edit-note-actions">
                     <button
                       onClick={handleSaveEdit}
                       className="btn btn-primary text-sm"
@@ -138,13 +138,13 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="flex justify-between items-start">
-                  <p className="text-gray-700 flex-1 pr-3">{note}</p>
+                <div className="note-content">
+                  <p className="text-gray-700 note-text">{note}</p>
                   {!readOnly && (
-                    <div className="flex gap-1">
+                    <div className="note-actions">
                       <button
                         onClick={() => handleEditNote(index)}
-                        className="p-1 text-gray-400 hover:text-primary-orange transition-colors"
+                        className="note-action-btn edit-btn"
                         title="Edit note"
                       >
                         <svg className="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +153,7 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
                       </button>
                       <button
                         onClick={() => handleDeleteNote(index)}
-                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                        className="note-action-btn delete-btn"
                         title="Delete note"
                       >
                         <svg className="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">

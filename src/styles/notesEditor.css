@@ -171,4 +171,104 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* Additional styles for Tailwind removal */
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.add-note-form {
+  margin-bottom: 1.5rem;
+}
+
+.add-note-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-note-input {
+  flex: 1;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.empty-notes {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--gray-500);
+}
+
+.empty-notes-icon {
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--gray-100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.note-item {
+  background-color: var(--gray-50);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--gray-200);
+}
+
+.edit-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.edit-note-textarea {
+  width: 100%;
+}
+
+.edit-note-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.note-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.note-text {
+  flex: 1;
+  padding-right: 0.75rem;
+}
+
+.note-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.note-action-btn {
+  padding: 0.25rem;
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.edit-btn:hover {
+  color: var(--primary-orange);
+}
+
+.delete-btn:hover {
+  color: #dc2626;
+}
 

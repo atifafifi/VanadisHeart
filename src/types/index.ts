@@ -2,19 +2,20 @@ export interface Recipe {
   id: string;
   name: string;
   description: string;
-  image?: string;
-  ingredients: string[];
   instructions: string[];
-  variants: RecipeVariant[];
-  notes: string[];
-  rating: number;
-  prepTime: number; // in minutes
-  cookTime: number; // in minutes
+  ingredients: string[];
+  prepTime: number;
+  cookTime: number;
   servings: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  difficulty: 'easy' | 'medium' | 'hard';
   tags: string[];
-  author: string;
-  createdAt: Date;
+  rating: number;
+  image: string;
+  isFavorite?: boolean;
+  variants?: RecipeVariant[];
+  notes?: string[];
+  author?: string;
+  createdAt?: Date;
 }
 
 export interface RecipeVariant {

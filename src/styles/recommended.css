@@ -6,17 +6,18 @@
 /* Layout */
 .recommended-container {
   min-height: 100vh;
-  background-color: #f9fafb;
-  padding-top: 6rem; /* ADDED FOR TOP NAVBAR */
+  background-color: var(--gray-50);
+  padding-top: 6rem;
+  /* ADDED FOR TOP NAVBAR */
   padding-left: 4rem;
   border-radius: 25px;
 }
 
 /* Header Section */
 .recommended-header {
-  background-color: #fff3e0;
+  background-color: var(--primary-pastel-50);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--gray-200);
   position: sticky;
   top: 2rem;
   border-radius: 15px;
@@ -36,11 +37,11 @@
 .recommended-title-section h1 {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #ff8a65;
+  color: var(--primary-pastel-light);
 }
 
 .recommended-title-section p {
-  color: #ffb74d;
+  color: var(--primary-pastel-300);
   margin-top: 0.25rem;
 }
 
@@ -60,9 +61,9 @@
 /* Content Section */
 .recommended-content {
   margin-top: 4rem;
-  background-color: #fff3e0;
+  background-color: var(--primary-pastel-50);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--gray-200);
   position: sticky;
   top: 2rem;
   border-radius: 15px;
@@ -80,7 +81,7 @@
 }
 
 .recommended-results-count p {
-  color: #4b5563;
+  color: var(--gray-600);
 }
 
 /* Empty State */
@@ -92,7 +93,7 @@
 .recommended-empty-icon-wrapper {
   width: 5rem;
   height: 5rem;
-  background-color: #f3f4f6;
+  background-color: var(--gray-100);
   border-radius: 9999px;
   display: flex;
   align-items: center;
@@ -103,19 +104,19 @@
 .recommended-empty-icon {
   width: 2.5rem;
   height: 2.5rem;
-  color: #9ca3af;
+  color: var(--gray-400);
 }
 
 .recommended-empty-state h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--gray-900);
   margin-bottom: 0.75rem;
 }
 
 .recommended-empty-state p {
   font-size: 1.125rem;
-  color: #6b7280;
+  color: var(--gray-500);
   margin-bottom: 1.5rem;
 }
 
@@ -150,8 +151,50 @@
 
 /* Recipe Card Container */
 .recommended-recipe-card {
-  height: 100%;
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-normal);
 }
+
+.recommended-recipe-card {
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-normal);
+}
+
+.recommended-recipe-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.recommended-recipe-card-header {
+  padding: var(--spacing-6);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.recommended-recipe-card-body {
+  padding: var(--spacing-6);
+}
+
+.recommended-recipe-card-footer {
+  padding: var(--spacing-6);
+  border-top: 1px solid var(--gray-200);
+  background-color: var(--gray-50);
+}
+
+/* Recipe Card Content */
+.recommended-recipe-card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+
 
 /* Hover Effects */
 .recommended-header-actions button {
@@ -164,7 +207,7 @@
 
 .recommended-empty-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+  box-shadow: 0 10px 25px rgba(255, 179, 186, 0.3);
 }
 
 /* Animation for empty state */
@@ -173,6 +216,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -189,92 +233,112 @@
   padding: 4rem 0;
 }
 
-.recommended-loading-spinner {
-  width: 3rem;
-  height: 3rem;
-  border: 4px solid #f3f4f6;
-  border-top-color: #ff6b35;
-  border-radius: 9999px;
+.recommended-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
-  margin: 0 auto;
 }
 
 @keyframes spin {
-  to {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
     transform: rotate(360deg);
   }
+}
+
+.recommended-error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #ef4444;
 }
 
 /* Base styles for all tags (Size, Shape, Font, Transition, Focus) */
 .tags-button {
   padding: 4px 12px;
   border-radius: 9999px;
-  font-size: 0.75rem; 
-  font-weight: 200; 
+  font-size: 0.75rem;
+  font-weight: 200;
 
   /* Inactive State Base Appearance */
   background-color: white;
-  color: #4b5563; 
-  border: 1px solid #9ca3af; 
+  color: var(--gray-600);
+  border: 1px solid var(--gray-400);
   box-shadow: none;
 
   /* Behavior & Transition */
   cursor: pointer;
   white-space: nowrap;
-  transition: all 150ms ease-in-out; 
+  transition: all 150ms ease-in-out;
 }
 
 /* Inactive State Hover/Focus */
 .tags-button:hover {
-  border-color: #ff7f24;
+  border-color: var(--primary-pastel-light);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1); 
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 /* Focus Ring (Accessibility) */
 .tags-button:focus {
   outline: none;
-  box-shadow: 0 0 0 4px white, 0 0 0 6px #ff7f24; /* Custom focus ring */
+  box-shadow: 0 0 0 4px white, 0 0 0 6px var(--primary-pastel-light);
+  /* Custom focus ring */
 }
 
 /* Active State (Defined by a modifier class) */
 .tags-button.is-active {
-  background-color: #ff7f24;
+  background-color: var(--primary-pastel-light);
   color: white;
-  border-color: #ff7f24;
+  border-color: var(--primary-pastel-light);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  /* Equivalent to shadow-lg */
 }
 
 
 .difficulty-button {
-  padding: 4px 12px; 
-  font-size: 0.75rem; 
-  border-radius: 9999px; 
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  border-radius: 9999px;
 
   /* Inactive State Base Appearance */
   background-color: white;
-  color: #4b5563; 
-  border: 1px solid #d1d5db; 
+  color: #4b5563;
+  border: 1px solid #d1d5db;
 
   /* Behavior & Transition */
   cursor: pointer;
   white-space: nowrap;
-  transition: all 150ms ease-in-out; /* Equivalent to Tailwind's transition-colors */
+  transition: all 150ms ease-in-out;
+  /* Equivalent to Tailwind's transition-colors */
 }
 
 /* Inactive State Hover */
 .difficulty-button:hover {
-  border-color: var(--primary-orange);
+  border-color: var(--primary-pastel);
 }
 
 .difficulty-button.is-active {
-  background-color: var(--primary-orange);
+  background-color: var(--primary-pastel);
   color: white;
-  border-color: var(--primary-orange); 
+  border-color: var(--primary-pastel);
 }
 
 .difficulty-button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-orange);
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-pastel);
 }

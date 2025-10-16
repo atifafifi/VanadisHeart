@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import FoodImageCollage from '../components/FoodImageCollage';
 import '../styles/LoginPage.css';
 
 
@@ -34,30 +35,26 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-orange-50 via-orange-50 to-primary-orange-100 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="login-wrapper">
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary-orange opacity-10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary-orange-dark opacity-10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="login-background">
+        <div className="login-background-circle login-background-circle-top"></div>
+        <div className="login-background-circle login-background-circle-bottom"></div>
       </div>
       
-      <div className="max-w-md w-full space-y-8 relative z-10">
-        <div className="text-center transform transition-all duration-500 hover:scale-105">
-          <div className="mx-auto h-20 w-20 bg-gradient-to-br from-primary-orange to-primary-orange-dark rounded-2xl flex items-center justify-center mb-6 shadow-2xl transform transition-all duration-300 hover:rotate-12 hover:shadow-primary-orange/50">
-            <svg className="icon-2xl text-white animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+      <div className="login-container">
+        <div className="login-header">
+          <div className="login-logo">
+            <svg className="login-logo-icon" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary-orange to-primary-orange-dark">Welcome to VanadisHeart</h2>
-          <p className="text-lg text-gray-600 mb-2 animate-fade-in">
-            Your culinary journey starts here
-          </p>
-          <p className="text-sm text-gray-500 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Discover, cook, and share amazing recipes
-          </p>
+          <h2 className="login-title">Welcome to VanadisHeart</h2>
+          <p className="login-subtitle">Your culinary journey starts here</p>
+          <p className="login-description">Discover, cook, and share amazing recipes</p>
         </div>
 
-        <div className="card backdrop-blur-sm bg-white/80 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+        <div className="login-card">
           <div className="card-body">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="form-group transform transition-all duration-300 focus-within:scale-102">
@@ -70,7 +67,7 @@ const LoginPage: React.FC = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="form-input transition-all duration-300 focus:shadow-lg focus:border-primary-orange focus:ring-2 focus:ring-primary-orange/50"
+                  className="form-input transition-all duration-300 focus:shadow-lg focus:border-primary-pastel focus:ring-2 focus:ring-primary-pastel/50"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -87,7 +84,7 @@ const LoginPage: React.FC = () => {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="form-input transition-all duration-300 focus:shadow-lg focus:border-primary-orange focus:ring-2 focus:ring-primary-orange/50"
+                  className="form-input transition-all duration-300 focus:shadow-lg focus:border-primary-pastel focus:ring-2 focus:ring-primary-pastel/50"
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -100,7 +97,7 @@ const LoginPage: React.FC = () => {
                     id="remember-me"
                     name="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-primary-orange focus:ring-primary-orange border-gray-300 rounded"
+                    className="h-4 w-4 text-primary-pastel focus:ring-primary-pastel border-gray-300 rounded"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                     Remember me
@@ -108,7 +105,7 @@ const LoginPage: React.FC = () => {
                 </div>
 
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-primary-orange hover:text-primary-orange-dark">
+                  <a href="#" className="font-medium text-primary-pastel hover:text-primary-pastel-dark">
                     Forgot your password?
                   </a>
                 </div>
@@ -137,7 +134,7 @@ const LoginPage: React.FC = () => {
               <div className="text-center">
                 <p className="text-sm text-gray-600">
                   Don't have an account?{' '}
-                  <a href="#" className="font-medium text-primary-orange hover:text-primary-orange-dark">
+                  <a href="#" className="font-medium text-primary-pastel hover:text-primary-pastel-dark">
                     Sign up here
                   </a>
                 </p>
@@ -152,6 +149,9 @@ const LoginPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Add the food image collage */}
+      <FoodImageCollage />
     </div>
   );
 };

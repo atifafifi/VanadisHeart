@@ -66,7 +66,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           />
           <button
             type="submit"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-primary-orange-50 rounded-r-md transition-colors"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-primary-pastel-50 rounded-r-md transition-colors"
           ></button>
         </div>
       </form>

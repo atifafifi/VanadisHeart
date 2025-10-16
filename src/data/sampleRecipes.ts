@@ -53,7 +53,7 @@ export const sampleRecipes: Recipe[] = [
     prepTime: 10,
     cookTime: 15,
     servings: 4,
-    difficulty: 'Medium',
+    difficulty: 'medium',
     tags: ['Italian', 'Pasta', 'Quick', 'Comfort Food'],
     author: 'Chef Marco',
     createdAt: new Date('2024-01-15')
@@ -102,7 +102,7 @@ export const sampleRecipes: Recipe[] = [
     prepTime: 15,
     cookTime: 20,
     servings: 4,
-    difficulty: 'Easy',
+    difficulty: 'easy',
     tags: ['Seafood', 'Healthy', 'Asian-inspired', 'Gluten-free'],
     author: 'Chef Sarah',
     createdAt: new Date('2024-01-20')
@@ -156,7 +156,7 @@ export const sampleRecipes: Recipe[] = [
     prepTime: 20,
     cookTime: 35,
     servings: 12,
-    difficulty: 'Medium',
+    difficulty: 'medium',
     tags: ['Dessert', 'Chocolate', 'Baking', 'Special Occasion'],
     author: 'Chef Maria',
     createdAt: new Date('2024-01-25')
