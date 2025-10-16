@@ -1,66 +1,74 @@
-Vanadis Hearth: Recipe Management App
+🧡 Vanadis Hearth: Recipe Management App
 
-Welcome to Vanadis Hearth, your personal sanctuary for finding, managing, and preserving culinary treasures. This project is built using React, TypeScript, and Vite, with data persistence managed by Firebase Firestore.
+Vanadis Hearth is your personal sanctuary for discovering, managing, and preserving culinary treasures.
+Built with React, TypeScript, and Vite, it offers a responsive, orange-themed interface — designed for clarity, comfort, and warmth.
+Data persistence and authentication are powered by Firebase Firestore.
 
-The current application is focused on a responsive, orange-themed frontend shell, ready for the core logic integration.
+🚀 Quick Start
+Prerequisites
 
-🚀 Quick Start (Running the Project)
+Make sure you have Node.js and npm (or yarn/pnpm) installed.
 
-This project requires Node.js and npm (or yarn/pnpm).
+Run the Development Server
 
-Open the Terminal:
+Open your terminal:
 
-The fastest way to open the integrated terminal is by pressing the keyboard shortcut: Ctrl + ~ (Control key and the tilde key).
+Press Ctrl + ~ (Control + tilde) in your editor,
+or click “Show Terminal” in the main panel.
 
-Alternatively, look for the "Show Terminal" link in the center of the main editor panel and click it.
-
-Start the Development Server:
-
-Once the terminal is open, run the following command:
+Start the server:
 
 npm run dev
 
 
-View the App:
+Open the app:
 
-The terminal output will provide a local URL (e.g., http://localhost:5173). Click this link to open the application preview.
+The terminal will show a local URL (e.g. http://localhost:5173).
+Click it to preview the application.
 
-📂 Project Structure & Navigation
+🗂️ Project Structure
+File / Folder	Purpose
+src/App.tsx	Main application file. Contains global state, routing, Firebase initialization, and core UI components.
+vite.config.ts	Configuration for the build and development environment.
+package.json	Dependencies, metadata, and script definitions.
+Navigating the Files
 
-The primary components for this application are located here:
+Activity Bar: Located on the far-left sidebar.
 
-File/Folder
+Explorer Icon: The topmost icon (stack of files).
 
-Purpose
+Shortcut: Ctrl + Shift + E
 
-src/App.tsx
+⚙️ Next Steps for Development
+🔸 Firebase Integration
 
-Main Application File. Contains all state, routing logic, Firebase initialization, and primary UI components.
+Add the global variables __firebase_config and __initial_auth_token to App.tsx.
 
-vite.config.ts
+Establish Firebase connection and authentication flow.
 
-Configuration file for the build and development process.
+🔸 Firestore Logic
 
-package.json
+Implement CRUD operations for the “My Recipes” view.
 
-Project dependencies and script commands.
+Store user data securely within each user’s Firestore path.
 
-Accessing Files (The Explorer View)
+🔸 API Integration
 
-To see and navigate the file structure:
+Connect to TheMealDB public API for the “Discover” view.
 
-Access the Activity Bar: Look at the far left vertical column of icons.
+Fetch and display external recipe data dynamically.
 
-Click the Explorer Icon: Click the topmost icon, which looks like a stack of files.
+🧩 Tech Stack
 
-Keyboard Shortcut: Ctrl + Shift + E
+Frontend: React, TypeScript, Vite
 
-✅ Next Steps for Development
+Backend: Firebase Firestore
 
-Our immediate focus is integrating the backend to make the app functional:
+UI Theme: Responsive, orange-accented minimal design
 
-Firebase Initialization: Integrate the global __firebase_config and __initial_auth_token into App.tsx to establish the connection and authenticate the user.
+API: TheMealDB (for public recipe data)
 
-Firestore Logic: Implement the CRUD (Create, Read, Update, Delete) operations for the "My Recipes" view, storing private data in the user's Firestore path.
+📌 Status
 
-TheMealDB Integration: Implement the public API calls for the "Discover" view to fetch external recipe data.
+🧱 Current Stage: Frontend shell complete.
+Next: Core logic and data integration in progress
