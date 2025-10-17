@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import SearchBar from "../components/SearchBar";
 import type { Recipe } from "../types";
-import { fetchRecipes, getRandomQuery } from "../services/recipeApi";
+import { fetchRecipes } from "../services/recipeApi";
 import "../styles/recommended.css";
 
 interface RecipeFilters {
@@ -19,16 +19,56 @@ const RecommendedRecipesPage: React.FC = () => {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<RecipeFilters>({
+    query: '',
+    tags: [],
+    difficulty: [],
+    maxPrepTime: 0,
+    minRating: 0,
+  });
   const navigate = useNavigate();
+
+  // Add available tags array
+  const availableTags = [
+    'Italian',
+    'Asian',
+    'Quick',
+    'Comfort Food',
+    'Seafood',
+    'Healthy',
+    'Gluten Free',
+    'Dessert',
+    'Chocolate',
+    'Baking',
+    'Special Occasion'
+  ];
+
+  // Add toggle functions
+  const toggleTag = (tag: string) => {
+    setFilters(prev => ({
+      ...prev,
+      tags: prev.tags?.includes(tag)
+        ? prev.tags.filter(t => t !== tag)
+        : [...(prev.tags || []), tag]
+    }));
+  };
+
+  const toggleDifficulty = (difficulty: string) => {
+    setFilters(prev => ({
+      ...prev,
+      difficulty: prev.difficulty?.includes(difficulty)
+        ? prev.difficulty.filter(d => d !== difficulty)
+        : [...(prev.difficulty || []), difficulty]
+    }));
+  };
 
   useEffect(() => {
     const loadRandomRecipes = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const randomQuery = getRandomQuery();
-        console.log("Fetching recipes for:", randomQuery);
-        const initialRecipes = await fetchRecipes(randomQuery);
+        // Fetch 10 recipes by using empty query (triggers multiple random queries)
+        const initialRecipes = await fetchRecipes('');
         setRecipes(initialRecipes);
         setFilteredRecipes(initialRecipes);
       } catch (err) {
@@ -62,7 +102,14 @@ const RecommendedRecipesPage: React.FC = () => {
     }
   };
 
-  const handleFiltersChange = (filters: RecipeFilters) => {
+  const handleFiltersChange = (newFilters: RecipeFilters) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...newFilters,
+    }));
+  };
+
+  useEffect(() => {
     let filtered = [...recipes];
 
     // Apply text search
@@ -107,7 +154,7 @@ const RecommendedRecipesPage: React.FC = () => {
     }
 
     setFilteredRecipes(filtered);
-  };
+  }, [filters, recipes]);
 
   const handleRecipeClick = (recipe: Recipe) => {
     sessionStorage.setItem('currentRecipe', JSON.stringify(recipe));
@@ -116,135 +163,182 @@ const RecommendedRecipesPage: React.FC = () => {
 
   //reset const function
   const resetFilters = () => {
+    setFilters({
+      query: '',
+      tags: [],
+      difficulty: [],
+      maxPrepTime: 0,
+      minRating: 0,
+    });
     setFilteredRecipes(recipes);
   };
 
   return (
     <div className="recommended-container">
-      {" "}
-      {/* Header */}
       <div className="recommended-header">
-        <div className="recommended-header-content">
-          <div className="recommended-header-flex">
-            <div className="recommended-title-section">
-              <h1>Recommended Recipes</h1>
-              <p>Discover amazing recipes tailored for you</p>
-            </div>
-            <div className="recommended-header-actions">
-              <button
-                onClick={() => navigate("/search")}
-                className="btn btn-outline"
-              >
-                <svg
-                  className="btn-icon"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                Advanced Search
-              </button>
-              <button
-                onClick={() => navigate("/my-recipes")}
-                className="btn btn-secondary"
-              >
-                <svg
-                  className="btn-icon"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-                My Recipes
-              </button>
-            </div>
-          </div>
+        <div className="recommended-title-section">
+          <h1 className="recommended-title">Recommended Recipes</h1>
+          <p className="recommended-subtitle">Discover amazing recipes tailored for you</p>
+        </div>
+        <div className="recommended-header-actions">
+          <button
+            onClick={() => navigate('/search')}
+            className="btn btn-outline"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Advanced Search
+          </button>
+          <button
+            onClick={() => navigate('/my-recipes')}
+            className="btn btn-secondary"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            My Recipes
+          </button>
         </div>
       </div>
+
       <div className="recommended-content">
-        {/* Search Bar */}
-        <div className="recommended-search">
-          <SearchBar
-            onSearch={handleSearch}
-            placeholder="Search recipes by name, ingredients, or tags..."
-            showFilters={true}
-            onFiltersChange={handleFiltersChange}
-          />
-        </div>
+        {/* Enhanced Search and Filters Section */}
+        <div className="recommended-filters-grid">
+          <div className="recommended-filters-sidebar">
+            <div className="filters-card">
+              <div className="filters-header">
+                <h2>Filters</h2>
+                <button
+                  onClick={resetFilters}
+                  className="clear-filters-button"
+                >
+                  Clear All
+                </button>
+              </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="recommended-loading-state">
-            <div className="spinner"></div>
-            <p>Loading recipes...</p>
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && (
-          <div className="recommended-error-state">
-            <p>{error}</p>
-            <button onClick={() => handleSearch("")} className="btn btn-primary">
-              Retry
-            </button>
-          </div>
-        )}
-
-        {/* Results Count */}
-        {!isLoading && !error && (
-          <div className="recommended-results-count">
-            <p>
-              Showing {filteredRecipes.length} of {recipes.length} recipes
-            </p>
-          </div>
-        )}
-
-        {/* Recipes Grid */}
-        {!isLoading && filteredRecipes.length === 0 ? (
-          <div className="recommended-empty-state">
-            <div className="recommended-empty-icon-wrapper">
-              <svg
-                className="recommended-empty-icon"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              {/* Enhanced Search Input */}
+              <div className="filter-section">
+                <label className="filter-section-title">Search</label>
+                <SearchBar
+                  onSearch={handleSearch}
+                  placeholder="Search recipes..."
+                  showFilters={false}
                 />
-              </svg>
-              <p>No recipes found</p>
-              <button onClick={resetFilters} className="btn btn-primary">
-                Reset Filters
-              </button>
+              </div>
+
+
+              {/* Tags Filter */}
+              <div className="filter-section">
+                <label className="filter-section-title">Tags</label>
+                <div className="filter-tags">
+                  {availableTags.map((tag) => (
+                    <button
+                      key={tag}
+                      className={`tags-button ${
+                        filters.tags?.includes(tag) ? 'is-active' : ''
+                      }`}
+                      onClick={() => toggleTag(tag)}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Difficulty Filter */}
+              <div className="filter-section">
+                <label className="filter-section-title">Difficulty</label>
+                <div className="filter-tags">
+                  {['Easy', 'Medium', 'Hard'].map((diff) => (
+                    <button
+                      key={diff}
+                      className={`difficulty-button ${
+                        filters.difficulty?.includes(diff) ? 'is-active' : ''
+                      }`}
+                      onClick={() => toggleDifficulty(diff)}
+                    >
+                      {diff}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Prep Time Slider */}
+              <div className="filter-section">
+                <div className="filter-slider-header">
+                  <label className="filter-section-title">Maximum Prep Time</label>
+                  <span className="filter-slider-value">
+                    {filters.maxPrepTime || 'Any'} min
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="120"
+                  step="15"
+                  value={filters.maxPrepTime || 0}
+                  onChange={(e) => handleFiltersChange({ 
+                    maxPrepTime: Number(e.target.value) 
+                  })}
+                  className="filter-slider"
+                />
+              </div>
             </div>
           </div>
-        ) : (
-          <div className="recommended-grid">
-            {filteredRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                onClick={() => handleRecipeClick(recipe)}
-              />
-            ))}
+
+          {/* Enhanced Results Section */}
+          <div className="recommended-results">
+            {/* Enhanced Results Header */}
+            <div className="results-header">
+              <div className="results-count">
+                <h2>{filteredRecipes.length} Recipe{filteredRecipes.length !== 1 ? 's' : ''} Found</h2>
+                {recipes.length !== filteredRecipes.length && (
+                  <p className="results-subtitle">Filtered from {recipes.length} total recipes</p>
+                )}
+              </div>
+              <div className="sort-container">
+                <label>Sort by:</label>
+                <select className="sort-select">
+                  <option value="relevance">Relevance</option>
+                  <option value="rating">Rating</option>
+                  <option value="time">Prep Time</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Enhanced Loading State */}
+            {isLoading && (
+              <div className="loading-state">
+                <div className="spinner"></div>
+                <p>Loading amazing recipes...</p>
+              </div>
+            )}
+
+            {/* Enhanced Error State */}
+            {error && !isLoading && (
+              <div className="error-state">
+                <p>{error}</p>
+                <button onClick={() => handleSearch('')} className="btn btn-primary">
+                  Try Again
+                </button>
+              </div>
+            )}
+
+            {/* Recipes Grid */}
+            {!isLoading && !error && (
+              <div className="recipes-grid">
+                {filteredRecipes.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    onClick={() => handleRecipeClick(recipe)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

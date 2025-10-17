@@ -5,6 +5,7 @@ import RecommendedRecipesPage from './pages/RecommendedRecipesPage';
 import RecipeDetailsPage from './pages/RecipeDetailsPage';
 import SearchRecipesPage from './pages/SearchRecipesPage';
 import MyRecipesPage from './pages/MyRecipesPage';
+import ShoppingListPage from './pages/ShoppingListPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/recipe/:id" element={<RecipeDetailsPage />} />
             <Route path="/search" element={<SearchRecipesPage />} />
             <Route path="/my-recipes" element={<MyRecipesPage />} />
+            <Route path="/shopping-list" element={<ShoppingListPage />} />
           </Routes>
         </main>
       </div>

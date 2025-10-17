@@ -1,40 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
-import { sampleRecipes } from '../data/sampleRecipes';
+import { fetchRecipes } from '../services/recipeApi';
+import { getSavedRecipes, getRecipeHistory } from '../services/userData';
 import type { Recipe, RecipeAttempt } from '../types';
 import '../styles/myRecipes.css';
 
 const MyRecipesPage: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'saved' | 'history'>('saved');
-  
-  const [savedRecipes] = useState<Recipe[]>(sampleRecipes.slice(0, 2));
-  const [recipeHistory] = useState<RecipeAttempt[]>([
-    {
-      recipeId: '1',
-      date: new Date('2024-01-20'),
-      rating: 5,
-      notes: 'Made this for dinner, turned out amazing!',
-      modifications: ['Added extra garlic', 'Used whole wheat pasta']
-    },
-    {
-      recipeId: '2',
-      date: new Date('2024-01-18'),
-      rating: 4,
-      notes: 'Great recipe, will make again',
-      modifications: ['Reduced salt']
-    }
-  ]);
+  const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [recipeHistory, setRecipeHistory] = useState<RecipeAttempt[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const recipes = await fetchRecipes();
+        setSavedRecipes(getSavedRecipes(recipes));
+        setRecipeHistory(getRecipeHistory());
+      } catch (err) {
+        setError("Failed to load recipes");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // Refresh data when component becomes visible (for when user saves/unsaves recipes)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        const loadData = async () => {
+          try {
+            const recipes = await fetchRecipes();
+            setSavedRecipes(getSavedRecipes(recipes));
+            setRecipeHistory(getRecipeHistory());
+          } catch (err) {
+            console.error('Error refreshing data:', err);
+          }
+        };
+        loadData();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   const handleRecipeClick = (recipeId: string) => {
     navigate(`/recipe/${recipeId}`);
   };
 
-  const getRecipeById = (id: string) => {
-    return sampleRecipes.find(recipe => recipe.id === id);
+  const getRecipeById = (id: string): Recipe | undefined => {
+    return savedRecipes.find(recipe => recipe.id === id);
   };
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -98,7 +124,28 @@ const MyRecipesPage: React.FC = () => {
         {/* Saved Recipes Tab */}
         {activeTab === 'saved' && (
           <div className="my-recipes-tab-content">
-            {savedRecipes.length === 0 ? (
+            {isLoading ? (
+              <div className="my-recipes-loading">
+                <div className="my-recipes-loading-spinner"></div>
+                <p>Loading saved recipes...</p>
+              </div>
+            ) : error ? (
+              <div className="my-recipes-empty-state">
+                <div className="my-recipes-empty-icon-wrapper">
+                  <svg className="my-recipes-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <h3>Error Loading Recipes</h3>
+                <p>{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="btn btn-primary my-recipes-empty-button"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : savedRecipes.length === 0 ? (
               <div className="my-recipes-empty-state">
                 <div className="my-recipes-empty-icon-wrapper">
                   <svg className="my-recipes-empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

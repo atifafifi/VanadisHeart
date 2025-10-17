@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import SearchBar from "../components/SearchBar";
-import { sampleRecipes } from "../data/sampleRecipes";
+import { fetchRecipes } from "../services/recipeApi";
 import type { Recipe, SearchFilters } from "../types";
 import "../styles/searchRecipes.css";
 
 const SearchRecipesPage: React.FC = () => {
-  const [recipes] = useState<Recipe[]>(sampleRecipes);
-  const [filteredRecipes, setFilteredRecipes] =
-    useState<Recipe[]>(sampleRecipes);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<SearchFilters>({
     query: "",
     tags: [],
@@ -19,13 +20,57 @@ const SearchRecipesPage: React.FC = () => {
   });
   const navigate = useNavigate();
 
-  const handleSearch = (query: string) => {
-    const newFilters = { ...filters, query };
-    setFilters(newFilters);
-    applyFilters({ ...newFilters });
+  // Add available tags array
+  const availableTags = [
+    "Italian",
+    "Asian",
+    "Quick",
+    "Comfort Food",
+    "Seafood",
+    "Healthy",
+    "Gluten Free",
+    "Dessert",
+    "Chocolate",
+    "Baking",
+    "Special Occasion",
+  ];
+
+  useEffect(() => {
+    const loadInitialRecipes = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const initialRecipes = await fetchRecipes();
+        setRecipes(initialRecipes);
+        setFilteredRecipes(initialRecipes);
+      } catch (err) {
+        setError("Failed to load recipes");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInitialRecipes();
+  }, []);
+
+  const handleSearch = async (query: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const searchResults = await fetchRecipes(query);
+      setRecipes(searchResults);
+      setFilteredRecipes(searchResults);
+      setFilters({ ...filters, query });
+    } catch (err) {
+      setError("Failed to search recipes");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleFiltersChange = (newFilters: any) => {
+  const handleFiltersChange = (newFilters: Partial<SearchFilters>) => {
     const updatedFilters = { ...filters, ...newFilters };
     setFilters(updatedFilters);
     applyFilters(updatedFilters);
@@ -97,6 +142,22 @@ const SearchRecipesPage: React.FC = () => {
     setFilteredRecipes(recipes);
   };
 
+  const resetToInitialRecipes = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const initialRecipes = await fetchRecipes();
+      setRecipes(initialRecipes);
+      setFilteredRecipes(initialRecipes);
+      clearAllFilters();
+    } catch (err) {
+      setError("Failed to load recipes");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const hasActiveFilters = () => {
     return (
       filters.query ||
@@ -107,9 +168,23 @@ const SearchRecipesPage: React.FC = () => {
     );
   };
 
+  // Add toggle functions
+  const toggleTag = (tag: string) => {
+    const newTags = filters.tags.includes(tag)
+      ? filters.tags.filter((t) => t !== tag)
+      : [...filters.tags, tag];
+    handleFiltersChange({ tags: newTags });
+  };
+
+  const toggleDifficulty = (difficulty: string) => {
+    const newDifficulty = filters.difficulty.includes(difficulty)
+      ? filters.difficulty.filter((d) => d !== difficulty)
+      : [...filters.difficulty, difficulty];
+    handleFiltersChange({ difficulty: newDifficulty });
+  };
+
   return (
     <div className="search-page-container">
-      {" "}
       {/* Header */}
       <div className="search-page-header">
         <div className="search-header-content">
@@ -139,7 +214,7 @@ const SearchRecipesPage: React.FC = () => {
         <div className="search-grid-layout">
           {/* Filters Sidebar */}
           <div className="search-filters-sidebar">
-            <div className="card search-filters-card">
+            <div className="search-filters-card">
               <div className="search-filters-header">
                 <h2>Filters</h2>
                 {hasActiveFilters() && (
@@ -152,12 +227,74 @@ const SearchRecipesPage: React.FC = () => {
                 )}
               </div>
               <div className="search-filters-body">
-                <SearchBar
-                  onSearch={handleSearch}
-                  placeholder="Search recipes..."
-                  showFilters={true}
-                  onFiltersChange={handleFiltersChange}
-                />
+                {/* Search Input */}
+                <div className="filter-section">
+                  <label className="filter-section-title">Search</label>
+                  <SearchBar
+                    onSearch={handleSearch}
+                    placeholder="Search recipes..."
+                    showFilters={false}
+                  />
+                </div>
+
+                {/* Tags Filter */}
+                <div className="filter-section">
+                  <label className="filter-section-title">Tags</label>
+                  <div className="filter-tags">
+                    {availableTags.map((tag) => (
+                      <button
+                        key={tag}
+                        className={`filter-tag ${
+                          filters.tags.includes(tag) ? "active" : ""
+                        }`}
+                        onClick={() => toggleTag(tag)}
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Difficulty Filter */}
+                <div className="filter-section">
+                  <label className="filter-section-title">Difficulty</label>
+                  <div className="filter-tags">
+                    {["Easy", "Medium", "Hard"].map((diff) => (
+                      <button
+                        key={diff}
+                        className={`filter-tag ${
+                          filters.difficulty.includes(diff) ? "active" : ""
+                        }`}
+                        onClick={() => toggleDifficulty(diff)}
+                      >
+                        {diff}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Prep Time Slider */}
+                <div className="filter-section">
+                  <div className="filter-slider-header">
+                    <label className="filter-section-title">Max Prep Time</label>
+                    <span className="filter-slider-value">
+                      {filters.prepTime || "Any"} min
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="120"
+                    step="15"
+                    value={filters.prepTime}
+                    onChange={(e) =>
+                      handleFiltersChange({
+                        prepTime: Number(e.target.value),
+                      })
+                    }
+                    className="filter-slider"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -261,8 +398,45 @@ const SearchRecipesPage: React.FC = () => {
               </div>
             )}
 
+            {/* Loading State */}
+            {isLoading && (
+              <div className="search-loading">
+                <div className="search-loading-spinner"></div>
+                <p>Loading recipes...</p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && !isLoading && (
+              <div className="search-empty-state">
+                <div className="search-empty-icon-wrapper">
+                  <svg
+                    className="search-empty-icon"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                    />
+                  </svg>
+                </div>
+                <h3>Error Loading Recipes</h3>
+                <p>{error}</p>
+                <button
+                  onClick={resetToInitialRecipes}
+                  className="btn btn-primary search-empty-button"
+                >
+                  Try Again
+                </button>
+              </div>
+            )}
+
             {/* Recipes Grid */}
-            {filteredRecipes.length === 0 ? (
+            {!isLoading && !error && filteredRecipes.length === 0 ? (
               <div className="search-empty-state">
                 <div className="search-empty-icon-wrapper">
                   <svg
@@ -282,23 +456,26 @@ const SearchRecipesPage: React.FC = () => {
                 <h3>No recipes found</h3>
                 <p>Try adjusting your search criteria or filters</p>
                 <button
-                  onClick={clearAllFilters}
+                  onClick={resetToInitialRecipes}
                   className="btn btn-primary search-empty-button"
                 >
-                  Clear All Filters
+                  Load Recipes
                 </button>
               </div>
             ) : (
-              <div className="search-recipes-grid">
-                {filteredRecipes.map((recipe) => (
-                  <RecipeCard
-                    key={recipe.id}
-                    recipe={recipe}
-                    onClick={() => handleRecipeClick(recipe.id)}
-                    className="search-recipe-card"
-                  />
-                ))}
-              </div>
+              !isLoading &&
+              !error && (
+                <div className="search-recipes-grid">
+                  {filteredRecipes.map((recipe) => (
+                    <RecipeCard
+                      key={recipe.id}
+                      recipe={recipe}
+                      onClick={() => handleRecipeClick(recipe.id)}
+                      className="search-recipe-card"
+                    />
+                  ))}
+                </div>
+              )
             )}
           </div>
         </div>

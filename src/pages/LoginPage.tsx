@@ -6,8 +6,8 @@ import '../styles/LoginPage.css';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'admin@gmail.com',
+    password: 'admin'
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -27,9 +27,14 @@ const LoginPage: React.FC = () => {
     // Simulate login process
     setTimeout(() => {
       setIsLoading(false);
-      // For demo purposes, any email/password combination works
-      if (formData.email && formData.password) {
+      // Check for admin credentials
+      if (formData.email === 'admin@gmail.com' && formData.password === 'admin') {
         navigate('/recommended');
+      } else {
+        // For demo purposes, any other email/password combination also works
+        if (formData.email && formData.password) {
+          navigate('/recommended');
+        }
       }
     }, 1000);
   };
@@ -145,7 +150,7 @@ const LoginPage: React.FC = () => {
 
         <div className="text-center">
           <p className="text-xs text-gray-500">
-            Demo: Use any email and password to sign in
+            Demo: Use admin@gmail.com / admin or any email and password to sign in
           </p>
         </div>
       </div>

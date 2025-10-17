@@ -34,6 +34,7 @@ export interface User {
   email: string;
   savedRecipes: string[];
   recipeHistory: RecipeAttempt[];
+  shoppingLists: ShoppingList[];
 }
 
 export interface RecipeAttempt {
@@ -42,6 +43,24 @@ export interface RecipeAttempt {
   rating: number;
   notes: string;
   modifications: string[];
+}
+
+export interface ShoppingListItem {
+  id: string;
+  ingredient: string;
+  quantity?: string;
+  isCompleted: boolean;
+  recipeId?: string; // Optional: link to recipe if added from one
+  addedDate: Date;
+  image?: string; // Optional: image for the ingredient
+}
+
+export interface ShoppingList {
+  id: string;
+  name: string; // Recipe name or custom name
+  items: ShoppingListItem[];
+  createdDate: Date;
+  isCompleted: boolean;
 }
 
 export interface SearchFilters {

@@ -9,6 +9,12 @@
   overflow: hidden;
 }
 
+/* Hide navigation on login page */
+body:has(.login-wrapper) .top-navbar,
+.login-wrapper ~ .top-navbar {
+  display: none !important;
+}
+
 .login-background {
   position: absolute;
   inset: 0;

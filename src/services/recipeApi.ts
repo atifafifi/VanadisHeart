@@ -107,26 +107,61 @@ const getCulinaryTags = (recipe: NinjaAPIRecipe): string[] => {
 export const fetchRecipes = async (query: string = ''): Promise<Recipe[]> => {
   try {
     const searchQuery = query.trim() || getRandomQuery();
-    
-    const response = await fetch(`${BASE_URL}?query=${encodeURIComponent(searchQuery)}`, {
-      headers: {
-        'X-Api-Key': API_KEY,
-        'Content-Type': 'application/json'
+
+    // Fetch multiple queries to get more recipes
+    const queries = query.trim() ? [searchQuery] : [
+      searchQuery,
+      getRandomQuery(),
+      getRandomQuery(),
+      getRandomQuery()
+    ];
+
+    // Remove duplicates
+    const uniqueQueries = [...new Set(queries)];
+
+    // Fetch recipes from multiple queries concurrently
+    const recipePromises = uniqueQueries.map(async (q) => {
+      const response = await fetch(`${BASE_URL}?query=${encodeURIComponent(q)}`, {
+        headers: {
+          'X-Api-Key': API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      return response.json() as Promise<NinjaAPIRecipe[]>;
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const recipeResults = await Promise.all(recipePromises);
 
-    const data = await response.json() as NinjaAPIRecipe[];
+    // Flatten and combine all recipes
+    const allRecipes = recipeResults.flat();
 
+    // Shuffle and limit to 10 recipes
+    const shuffledRecipes = allRecipes.sort(() => Math.random() - 0.5).slice(0, 10);
+
+    // Fetch images for all recipes concurrently with specific queries
     const recipesWithImages = await Promise.all(
-      data.map(async (item: NinjaAPIRecipe) => {
-        const imageUrl = await fetchRecipeImage();
+      shuffledRecipes.map(async (item: NinjaAPIRecipe) => {
+        // Extract a relevant food keyword from the recipe title or ingredients for image search
+        const titleWords = item.title.toLowerCase().split(' ');
+        const ingredientWords = item.ingredients.toLowerCase().split('|')[0]?.split(' ') || [];
+
+        // Find food-related keywords
+        const foodKeywords = [...titleWords, ...ingredientWords].filter(word =>
+          popularQueries.some(query => word.includes(query) || query.includes(word))
+        );
+
+        // Use the first matching keyword or a random one
+        const imageQuery = foodKeywords.length > 0 ? foodKeywords[0] : getRandomQuery();
+
+        const imageUrl = await fetchRecipeImage(imageQuery);
         let estimatedPrepTime = 20; // Default prep time
         let estimatedCookTime = 25; // Default cook time
-        
+
         // Estimate cooking time based on instructions complexity
         if (item.instructions.length > 500) {
           estimatedPrepTime = 40;

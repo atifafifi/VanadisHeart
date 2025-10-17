@@ -4,6 +4,7 @@ import {
   FiHome,
   FiSearch,
   FiBookmark,
+  FiShoppingCart,
   FiLogOut,
 } from "react-icons/fi";
 import "../styles/navigations.css";
@@ -37,6 +38,11 @@ const Navigation: React.FC<NavigationProps> = ({ className = "" }) => {
       path: "/my-recipes",
       label: "My Recipes",
       icon: <FiBookmark />,
+    },
+    {
+      path: "/shopping-list",
+      label: "Shopping List",
+      icon: <FiShoppingCart />,
     },
   ];
 
